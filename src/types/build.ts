@@ -2,7 +2,7 @@
 export interface Build {
     name: string;
     position: 'PG' | 'SG' | 'SF' | 'PF' | 'C';
-    archtype: 'Sharpshooter' | 'Slasher' | 'Playmaker' | 'Defender' | 'Rebounder';
+    archetype: 'Sharpshooter' | 'Slasher' | 'Playmaker' | 'Defender' | 'Rebounder';
     attributes: Attributes;
     points: number;
     bankedPoints: number;
@@ -38,5 +38,6 @@ export interface GameLog {
     turnovers: number;
     minutesPlayed: number;
     win: boolean;
+    points: number;
     fgPercentage: number;
 }
