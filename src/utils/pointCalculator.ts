@@ -18,3 +18,25 @@ export const calculateGamePoints = (game: GameLog, gamesPlayedThisMonth: number)
 
     // diminishing returns for points earned in a month
     points -= game.turnovers * -0.5; // -0.5 points per turnover
+
+    //Minimum points for playing
+    if (game.minutesPlayed >= 35) points += 0.5;
+    if (game.minutesPlayed >= 40) points += 0.5;
+    
+
+    //FG percentage bonus/Penalty
+    if (game.fgPercentage >= 55) points += 1;
+    if (game.fgPercentage >= 60) points += 0.5;
+    if (game.fgPercentage < 35) points -= 1;
+
+    //win bonus
+    if (game.win) points += 1;
+
+    //Achievement bonuses
+    if (game.points >= 40) points += 2;
+    if (game.points >= 50) points += 3;
+    if (game.steals + game.blocks >= 5) points += 2;
+    
+
+    return points;
+};
