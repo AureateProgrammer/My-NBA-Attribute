@@ -24,6 +24,20 @@ export interface Attributes {
   rebounding: number
   strength: number
   stamina: number
-  
 
+
+}
+
+export interface GameLog {
+    id: string;
+    date:string;
+    pointsEarned: number;
+    assists: number;
+    rebounds: number;
+    steals: number;
+    blocks: number;
+    turnovers: number;
+    minutesPlayed: number;
+    win: boolean;
+    fgPercentage: number;
 }
