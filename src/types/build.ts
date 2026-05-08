@@ -1,4 +1,3 @@
-import type { Attributes } from "react";
 
 export interface Build {
     name: string;
