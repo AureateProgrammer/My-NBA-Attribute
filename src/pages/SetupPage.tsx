@@ -25,6 +25,9 @@ const defaultAttributes: Attributes = {
     stamina : 25
 };
 
+  const MIN_ATTRIBUTE = 25
+  const MAX_ATTRIBUTE = 99
+
 const attributeLabels: Record<keyof Attributes, string> = {
   dunking: 'Dunking',
   speed: 'Speed',
@@ -45,6 +48,11 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
   const [position, setPosition] = useState<Build['position']>('PG')
   const [archetype, setArchetype] = useState<Build['archetype']>('Sharpshooter')
   const [attributes, setAttributes] = useState<Attributes>(defaultAttributes)
+  const [attributeInputs, setAttributeInputs] = useState<Record<keyof Attributes, string>>(
+    Object.fromEntries(
+      (Object.keys(defaultAttributes) as Array<keyof Attributes>).map((key) => [key, String(defaultAttributes[key])])
+    ) as Record<keyof Attributes, string>
+  )
   const [editingBuildId, setEditingBuildId] = useState<string | null>(null)
 
   const resetForm = () => {
@@ -52,6 +60,11 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
     setPosition('PG')
     setArchetype('Sharpshooter')
     setAttributes(defaultAttributes)
+    setAttributeInputs(
+      Object.fromEntries(
+        (Object.keys(defaultAttributes) as Array<keyof Attributes>).map((key) => [key, String(defaultAttributes[key])])
+      ) as Record<keyof Attributes, string>
+    )
     setEditingBuildId(null)
   }
 
@@ -61,15 +74,49 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
     setPosition(build.position)
     setArchetype(build.archetype)
     setAttributes(build.attributes)
+    setAttributeInputs(
+      Object.fromEntries(
+        (Object.keys(build.attributes) as Array<keyof Attributes>).map((key) => [key, String(build.attributes[key])])
+      ) as Record<keyof Attributes, string>
+    )
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const clampAttribute = (value: number) => Math.max(MIN_ATTRIBUTE, Math.min(MAX_ATTRIBUTE, value))
+
   const updateAttribute = (key: keyof Attributes, value: number) => {
-    const clamped = Number.isNaN(value) ? 0 : Math.max(25, Math.min(99, value))
+    const clamped = Number.isNaN(value) ? MIN_ATTRIBUTE : clampAttribute(value)
     setAttributes((prev) => ({
       ...prev,
       [key]: clamped,
     }))
+    setAttributeInputs((prev) => ({
+      ...prev,
+      [key]: String(clamped),
+    }))
+  }
+
+  const handleAttributeInput = (key: keyof Attributes, rawValue: string) => {
+    setAttributeInputs((prev) => ({
+      ...prev,
+      [key]: rawValue,
+    }))
+
+    const parsed = Number(rawValue)
+    if (!Number.isNaN(parsed)) {
+      setAttributes((prev) => ({
+        ...prev,
+        [key]: parsed,
+      }))
+    }
+  }
+
+  const normalizeAttributes = (values: Attributes): Attributes => {
+    const normalized = {} as Attributes
+    ;(Object.keys(values) as Array<keyof Attributes>).forEach((key) => {
+      normalized[key] = clampAttribute(values[key])
+    })
+    return normalized
   }
 
   const handleSubmit = () => {
@@ -78,11 +125,19 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
       return;
     }
 
+    const normalizedAttributes = normalizeAttributes(attributes)
+    setAttributes(normalizedAttributes)
+    setAttributeInputs(
+      Object.fromEntries(
+        (Object.keys(normalizedAttributes) as Array<keyof Attributes>).map((key) => [key, String(normalizedAttributes[key])])
+      ) as Record<keyof Attributes, string>
+    )
+
     const newBuild: BuildDraft = {
       name,
       position,
       archetype,
-      attributes,
+      attributes: normalizedAttributes,
       points: 0,
       bankedPoints: 0,
       monthlyPointsEarned: 0,
@@ -159,10 +214,11 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
                 <span>{attributeLabels[attrKey]}</span>
                 <input
                   type="number"
-                  min={25}
-                  max={99}
-                  value={attributes[attrKey]}
-                  onChange={(e) => updateAttribute(attrKey, Number(e.target.value))}
+                  min={MIN_ATTRIBUTE}
+                  max={MAX_ATTRIBUTE}
+                  value={attributeInputs[attrKey]}
+                  onChange={(e) => handleAttributeInput(attrKey, e.target.value)}
+                  onBlur={() => updateAttribute(attrKey, Number(attributeInputs[attrKey]))}
                 />
               </div>
             ))}
