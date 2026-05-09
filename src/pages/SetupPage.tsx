@@ -3,7 +3,8 @@ import type {Build, BuildDraft, Attributes} from '../types/build';
 
 interface SetupPageProps {
   layoutMode: 'classic' | 'coach' | 'focus';
-  onComplete: (build: BuildDraft) => void;
+  onCreate: (build: BuildDraft) => void;
+  onUpdateExisting: (buildId: string, build: BuildDraft) => void;
   existingBuilds: Build[];
   onLoadBuild: (buildId: string) => void;
   onDeleteBuild: (buildId: string) => void;
@@ -24,10 +25,52 @@ const defaultAttributes: Attributes = {
     stamina : 25
 };
 
-const SetupPage = ({ layoutMode, onComplete, existingBuilds, onLoadBuild, onDeleteBuild }: SetupPageProps) => {
+const attributeLabels: Record<keyof Attributes, string> = {
+  dunking: 'Dunking',
+  speed: 'Speed',
+  ballHandling: 'Ball Handling',
+  shooting3PT: '3PT Shooting',
+  midRange: 'Mid Range',
+  layup: 'Layup',
+  passAccuracy: 'Pass Accuracy',
+  perimeterD: 'Perimeter D',
+  interiorD: 'Interior D',
+  rebounding: 'Rebounding',
+  strength: 'Strength',
+  stamina: 'Stamina'
+}
+
+const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onLoadBuild, onDeleteBuild }: SetupPageProps) => {
   const [name, setName] = useState('')
   const [position, setPosition] = useState<Build['position']>('PG')
   const [archetype, setArchetype] = useState<Build['archetype']>('Sharpshooter')
+  const [attributes, setAttributes] = useState<Attributes>(defaultAttributes)
+  const [editingBuildId, setEditingBuildId] = useState<string | null>(null)
+
+  const resetForm = () => {
+    setName('')
+    setPosition('PG')
+    setArchetype('Sharpshooter')
+    setAttributes(defaultAttributes)
+    setEditingBuildId(null)
+  }
+
+  const startEditing = (build: Build) => {
+    setEditingBuildId(build.id)
+    setName(build.name)
+    setPosition(build.position)
+    setArchetype(build.archetype)
+    setAttributes(build.attributes)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const updateAttribute = (key: keyof Attributes, value: number) => {
+    const clamped = Number.isNaN(value) ? 0 : Math.max(25, Math.min(99, value))
+    setAttributes((prev) => ({
+      ...prev,
+      [key]: clamped,
+    }))
+  }
 
   const handleSubmit = () => {
     if (!name.trim()) {
@@ -39,19 +82,30 @@ const SetupPage = ({ layoutMode, onComplete, existingBuilds, onLoadBuild, onDele
       name,
       position,
       archetype,
-      attributes: defaultAttributes,
+      attributes,
       points: 0,
       bankedPoints: 0,
       monthlyPointsEarned: 0,
       gamesPlayedThisMonth: 0
     };
-    onComplete(newBuild);
+
+    if (editingBuildId) {
+      onUpdateExisting(editingBuildId, newBuild)
+    } else {
+      onCreate(newBuild)
+    }
+
+    resetForm()
   };
 
   return (
     <div className={`setup-page layout-${layoutMode}`}>
-      <h1>Create Your Build</h1>
-      <p>Set up your player to get started</p>
+      <h1>{editingBuildId ? 'Edit Your Build' : 'Create Your Build'}</h1>
+      <p>
+        {editingBuildId
+          ? 'Update this player before syncing with MyLEAGUE.'
+          : 'Set up your player to get started'}
+      </p>
 
       <div className="setup-form">
         {/* Player Name */}
@@ -97,9 +151,34 @@ const SetupPage = ({ layoutMode, onComplete, existingBuilds, onLoadBuild, onDele
           </div>
         </div>
 
-        <button className="submit-btn" onClick={handleSubmit}>
-          Create Build →
-        </button>
+        <div className="attributes-editor">
+          <label>Starting Attributes (25-99)</label>
+          <div className="attributes-grid">
+            {(Object.keys(attributes) as Array<keyof Attributes>).map((attrKey) => (
+              <div className="attribute-input" key={attrKey}>
+                <span>{attributeLabels[attrKey]}</span>
+                <input
+                  type="number"
+                  min={25}
+                  max={99}
+                  value={attributes[attrKey]}
+                  onChange={(e) => updateAttribute(attrKey, Number(e.target.value))}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="setup-actions">
+          {editingBuildId && (
+            <button className="secondary-btn" onClick={resetForm}>
+              Cancel Edit
+            </button>
+          )}
+          <button className="submit-btn" onClick={handleSubmit}>
+            {editingBuildId ? 'Save Changes →' : 'Create Build →'}
+          </button>
+        </div>
       </div>
 
       {existingBuilds.length > 0 && (
@@ -116,6 +195,9 @@ const SetupPage = ({ layoutMode, onComplete, existingBuilds, onLoadBuild, onDele
                 </div>
                 <div className="save-actions">
                   <button onClick={() => onLoadBuild(build.id)}>Open</button>
+                  <button className="edit-btn" onClick={() => startEditing(build)}>
+                    Edit
+                  </button>
                   <button
                     className="danger"
                     onClick={() => {

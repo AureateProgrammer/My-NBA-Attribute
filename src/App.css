@@ -250,6 +250,59 @@ body {
   transition: background-color 0.2s;
 }
 
+.setup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.attributes-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.attributes-editor > label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.attribute-input {
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  background: var(--surface-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attribute-input span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted-2);
+}
+
+.attribute-input input {
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  padding: 8px;
+}
+
 .save-slots {
   width: 100%;
   max-width: 720px;
@@ -310,6 +363,11 @@ body {
 .save-actions .danger {
   border-color: var(--danger-line);
   color: var(--danger);
+}
+
+.save-actions .edit-btn {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 /* Dashboard */
@@ -398,6 +456,14 @@ body {
 
 .layout-coach .setup-form .submit-btn {
   grid-column: 2;
+}
+
+.layout-coach .attributes-editor {
+  grid-column: 1 / -1;
+}
+
+.layout-coach .setup-actions {
+  grid-column: 1 / -1;
 }
 
 .layout-focus .setup-page {
@@ -799,6 +865,10 @@ body {
     max-width: 100%;
   }
 
+  .attributes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   /* Points bar stacks */
   .points-bar {
     grid-template-columns: 1fr;
@@ -898,6 +968,16 @@ body {
 
   .save-actions button {
     flex: 1;
+  }
+
+  .setup-actions {
+    width: 100%;
+  }
+
+  .setup-actions .secondary-btn,
+  .setup-actions .submit-btn {
+    flex: 1;
+    text-align: center;
   }
 
   .points-card h2 {

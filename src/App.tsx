@@ -168,6 +168,22 @@ function App() {
     navigate(`/dashboard/${newBuild.id}`)
   }
 
+  const handleUpdateExistingBuild = (buildId: string, draft: BuildDraft) => {
+    const existingBuild = builds.find((build) => build.id === buildId)
+    if (!existingBuild) return
+
+    const updatedBuild: Build = {
+      ...existingBuild,
+      ...draft,
+      attributes: draft.attributes,
+    }
+
+    const nextBuilds = builds.map((build) => (build.id === buildId ? updatedBuild : build))
+    persistBuilds(nextBuilds)
+    setActive(buildId)
+    navigate(`/dashboard/${buildId}`)
+  }
+
   const updateBuild = (updatedBuild: Build) => {
     const nextBuilds = builds.map((build) => (build.id === updatedBuild.id ? updatedBuild : build))
     persistBuilds(nextBuilds)
@@ -238,7 +254,8 @@ function App() {
           element={
             <SetupPage
               layoutMode={layoutMode}
-              onComplete={handleSetupComplete}
+              onCreate={handleSetupComplete}
+              onUpdateExisting={handleUpdateExistingBuild}
               existingBuilds={builds}
               onLoadBuild={handleLoadBuild}
               onDeleteBuild={handleDeleteBuild}
