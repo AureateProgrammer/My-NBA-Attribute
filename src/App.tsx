@@ -11,12 +11,19 @@ const ACTIVE_BUILD_STORAGE_KEY = 'progression_active_build_id'
 const LEGACY_BUILD_STORAGE_KEY = 'progression_build'
 const LEGACY_GAMELOG_STORAGE_KEY = 'progression_gamelogs'
 const LAYOUT_STORAGE_KEY = 'progression_layout_mode'
+const THEME_STORAGE_KEY = 'progression_theme_mode'
 
 type LayoutMode = 'classic' | 'coach' | 'focus'
 const LAYOUT_MODES: LayoutMode[] = ['classic', 'coach', 'focus']
+type ThemeMode = 'mono' | 'forest' | 'sunset'
+const THEME_MODES: ThemeMode[] = ['mono', 'forest', 'sunset']
 
 const isLayoutMode = (value: string | null): value is LayoutMode => {
   return value !== null && LAYOUT_MODES.includes(value as LayoutMode)
+}
+
+const isThemeMode = (value: string | null): value is ThemeMode => {
+  return value !== null && THEME_MODES.includes(value as ThemeMode)
 }
 
 const parseJSON = <T,>(value: string | null, fallback: T): T => {
@@ -121,10 +128,18 @@ function App() {
     const stored = localStorage.getItem(LAYOUT_STORAGE_KEY)
     return isLayoutMode(stored) ? stored : 'classic'
   })
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY)
+    return isThemeMode(stored) ? stored : 'mono'
+  })
 
   useEffect(() => {
     localStorage.setItem(LAYOUT_STORAGE_KEY, layoutMode)
   }, [layoutMode])
+
+  useEffect(() => {
+    localStorage.setItem(THEME_STORAGE_KEY, themeMode)
+  }, [themeMode])
 
   const setActive = (buildId: string | null) => {
     setActiveBuildId(buildId)
@@ -180,8 +195,9 @@ function App() {
   }
 
   return (
-    <div className={`app-shell layout-${layoutMode}`}>
-      <div className="layout-lab" role="group" aria-label="Layout presets">
+    <div className={`app-shell layout-${layoutMode} theme-${themeMode}`}>
+      <div className="style-lab-wrap">
+        <div className="layout-lab" role="group" aria-label="Layout presets">
         <span>Layout</span>
         {LAYOUT_MODES.map((mode) => (
           <button
@@ -192,6 +208,20 @@ function App() {
             {mode}
           </button>
         ))}
+        </div>
+
+        <div className="theme-lab" role="group" aria-label="Theme presets">
+          <span>Theme</span>
+          {THEME_MODES.map((mode) => (
+            <button
+              key={mode}
+              className={themeMode === mode ? 'active' : ''}
+              onClick={() => setThemeMode(mode)}
+            >
+              {mode}
+            </button>
+          ))}
+        </div>
       </div>
 
       <Routes>
