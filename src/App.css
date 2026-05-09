@@ -104,4 +104,32 @@ body {
 .button-group button.active {
   background: #1a1a1a;
   color: #fff;
-  border-color: #
+  border-color: #1a1a1a;
+}
+
+  @media (max-width: 600px) {
+    .setup-page {
+      padding: 20px 10px;
+    }
+
+    .setup-page h1 {
+      font-size: 32px;
+    }
+
+    .setup-form {
+      padding: 20px;
+    }
+  }
+
+  .submit-btn {
+    align-self: flex-end;
+    padding: 12px 24px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  } 
