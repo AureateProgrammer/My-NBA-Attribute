@@ -36,7 +36,31 @@ export const calculateGamePoints = (game: GameLog, gamesPlayedThisMonth: number)
     if (game.points >= 40) points += 2;
     if (game.points >= 50) points += 3;
     if (game.steals + game.blocks >= 5) points += 2;
-    
 
-    return points;
+    //triple double bonus
+    const tripleDouble = [game.points, game.assists, game.rebounds].filter(stat => stat >= 10).length >= 2;
+    if (tripleDouble) points += 2;
+
+    // All around bonuses
+  if (game.points >= 20 && game.assists >= 7 && game.rebounds >= 7) points += 4
+  else if (game.points >= 20 && game.assists >= 5 && game.rebounds >= 5) points += 3
+  else if (game.points >= 15 && game.assists >= 5 && game.rebounds >= 5) points += 2
+
+  if (game.points >= 10 && game.assists >= 3 && game.rebounds >= 3) points += 1
+
+// Diminishing returns after 10 games
+  if (gamesPlayedThisMonth >= DIMINISHING_RETURNS_THRESHOLD) {
+    points = points / 2
+  }
+  points = Math.max(points, 0); // Ensure points don't go negative
+
+  return Math.round(points*10)/10; // Round to 1 decimal place
 };
+
+export const applyMonthlyCap = (currentMonthly: number, earned: number): number => {
+  return Math.min(currentMonthly + earned, MONTHLY_POINT_CAP)
+}
+
+export const applyBankedCap = (banked: number): number => {
+  return Math.min(banked, MAX_BANKED)
+}
