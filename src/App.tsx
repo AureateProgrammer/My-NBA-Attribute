@@ -1,15 +1,26 @@
 import { useState } from 'react'
-import SetupPage from './pages/SetupPage';
-import type { Build } from './types/build';
+import SetupPage from './pages/SetupPage'
+import type { Build } from './types/build'
 import './App.css'
 
+const STORAGE_KEY = 'progression_build'
+
 function App() {
-  
-  const [build, setBuild] = useState<Build | null>(null);
+  const [build, setBuild] = useState<Build | null>(() => {
+    // load from localStorage on first render
+    const saved = localStorage.getItem(STORAGE_KEY)
+    return saved ? JSON.parse(saved) : null
+  })
 
   const handleSetupComplete = (newBuild: Build) => {
-    setBuild(newBuild);
-  };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newBuild))
+    setBuild(newBuild)
+  }
+
+  const updateBuild = (updatedBuild: Build) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedBuild))
+    setBuild(updatedBuild)
+  }
 
   return (
     <>
@@ -18,8 +29,7 @@ function App() {
       ) : (
         <div>
           <h1>{build.name}</h1>
-          <p>Position: {build.position}</p>
-          <p>Archetype: {build.archetype}</p>
+          {/* Dashboard comes next */}
         </div>
       )}
     </>
