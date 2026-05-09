@@ -1,5 +1,7 @@
 
 export interface Build {
+    id: string;
+    createdAt: number;
     name: string;
     position: 'PG' | 'SG' | 'SF' | 'PF' | 'C';
     archetype: 'Sharpshooter' | 'Slasher' | 'Playmaker' | 'Defender' | 'Rebounder';
@@ -9,6 +11,8 @@ export interface Build {
     monthlyPointsEarned: number;
     gamesPlayedThisMonth: number;
 }
+
+export type BuildDraft = Omit<Build, 'id' | 'createdAt'>;
 
 export interface Attributes {
     dunking: number
@@ -38,6 +42,5 @@ export interface GameLog {
     turnovers: number;
     minutesPlayed: number;
     win: boolean;
-    points: number;
     fgPercentage: number;
 }

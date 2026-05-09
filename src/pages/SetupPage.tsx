@@ -1,8 +1,12 @@
 import{useState} from 'react';
-import type {Build, Attributes} from '../types/build';
+import type {Build, BuildDraft, Attributes} from '../types/build';
 
 interface SetupPageProps {
-    onComplete: (build: Build) => void;
+  layoutMode: 'classic' | 'coach' | 'focus';
+  onComplete: (build: BuildDraft) => void;
+  existingBuilds: Build[];
+  onLoadBuild: (buildId: string) => void;
+  onDeleteBuild: (buildId: string) => void;
 }
 
 const defaultAttributes: Attributes = {
@@ -20,7 +24,7 @@ const defaultAttributes: Attributes = {
     stamina : 25
 };
 
-const SetupPage = ({ onComplete }: SetupPageProps) => {
+const SetupPage = ({ layoutMode, onComplete, existingBuilds, onLoadBuild, onDeleteBuild }: SetupPageProps) => {
   const [name, setName] = useState('')
   const [position, setPosition] = useState<Build['position']>('PG')
   const [archetype, setArchetype] = useState<Build['archetype']>('Sharpshooter')
@@ -31,7 +35,7 @@ const SetupPage = ({ onComplete }: SetupPageProps) => {
       return;
     }
 
-    const newBuild: Build = {
+    const newBuild: BuildDraft = {
       name,
       position,
       archetype,
@@ -45,7 +49,7 @@ const SetupPage = ({ onComplete }: SetupPageProps) => {
   };
 
   return (
-    <div className="setup-page">
+    <div className={`setup-page layout-${layoutMode}`}>
       <h1>Create Your Build</h1>
       <p>Set up your player to get started</p>
 
@@ -97,6 +101,37 @@ const SetupPage = ({ onComplete }: SetupPageProps) => {
           Create Build →
         </button>
       </div>
+
+      {existingBuilds.length > 0 && (
+        <div className="save-slots">
+          <h2>Saved Players</h2>
+          <div className="save-list">
+            {existingBuilds.map((build) => (
+              <div className="save-item" key={build.id}>
+                <div>
+                  <h3>{build.name}</h3>
+                  <p>
+                    {build.position} • {build.archetype} • {build.bankedPoints} pts banked
+                  </p>
+                </div>
+                <div className="save-actions">
+                  <button onClick={() => onLoadBuild(build.id)}>Open</button>
+                  <button
+                    className="danger"
+                    onClick={() => {
+                      if (confirm(`Delete ${build.name}? This cannot be undone.`)) {
+                        onDeleteBuild(build.id)
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

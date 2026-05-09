@@ -11,6 +11,52 @@ body {
   color: #1a1a1a;
 }
 
+.app-shell {
+  min-height: 100vh;
+}
+
+.layout-lab {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px auto 0;
+  padding: 8px;
+  border-radius: 999px;
+  border: 1.5px solid #d9d9d9;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+}
+
+.layout-lab span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #666;
+  margin-left: 4px;
+}
+
+.layout-lab button {
+  border: 1px solid #e1e1e1;
+  background: #fff;
+  color: #444;
+  border-radius: 999px;
+  padding: 8px 12px;
+  text-transform: capitalize;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.layout-lab button.active {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  color: #fff;
+}
+
 /* Setup Page */
 .setup-page {
   min-height: 100vh;
@@ -107,30 +153,679 @@ body {
   border-color: #1a1a1a;
 }
 
-  @media (max-width: 600px) {
-    .setup-page {
-      padding: 20px 10px;
-    }
+.submit-btn {
+  align-self: flex-end;
+  padding: 12px 24px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
-    .setup-page h1 {
-      font-size: 32px;
-    }
+.save-slots {
+  width: 100%;
+  max-width: 720px;
+  margin-top: 28px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
 
-    .setup-form {
-      padding: 20px;
-    }
+.save-slots h2 {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.save-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.save-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.save-item h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.save-item p {
+  font-size: 13px;
+  color: #666;
+}
+
+.save-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-actions button {
+  border: 1.5px solid #e8e8e8;
+  border-radius: 8px;
+  background: #fff;
+  color: #1a1a1a;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-actions .danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+/* Dashboard */
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-x: hidden;
+}
+
+.layout-classic .dashboard {
+  max-width: 1100px;
+}
+
+.layout-coach .dashboard {
+  max-width: 1280px;
+}
+
+.layout-coach .dashboard-grid {
+  grid-template-columns: 1.3fr 0.9fr;
+}
+
+.layout-coach .points-bar {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+.layout-coach .attributes-card {
+  padding: 36px;
+}
+
+.layout-focus .dashboard {
+  max-width: 920px;
+}
+
+.layout-focus .player-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.layout-focus .header-actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.layout-focus .player-select {
+  grid-column: 1 / -1;
+}
+
+.layout-focus .points-bar,
+.layout-focus .dashboard-grid {
+  grid-template-columns: 1fr;
+}
+
+.layout-focus .games-card {
+  order: -1;
+}
+
+.layout-focus .log-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.layout-classic .setup-form {
+  max-width: 520px;
+}
+
+.layout-coach .setup-page {
+  justify-content: flex-start;
+  padding-top: 88px;
+}
+
+.layout-coach .setup-form {
+  max-width: 760px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 18px;
+}
+
+.layout-coach .setup-form .form-group:nth-child(1) {
+  grid-column: 1 / -1;
+}
+
+.layout-coach .setup-form .submit-btn {
+  grid-column: 2;
+}
+
+.layout-focus .setup-page {
+  justify-content: flex-start;
+  padding-top: 110px;
+}
+
+.layout-focus .setup-form {
+  max-width: 420px;
+}
+
+.layout-focus .save-slots {
+  max-width: 420px;
+}
+
+/* Player Header */
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-header h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #1a1a1a;
+}
+
+.player-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag {
+  padding: 4px 12px;
+  background: #f0f0f0;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.log-btn {
+  padding: 12px 24px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.log-btn:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-select {
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.secondary-btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #e8e8e8;
+  background: #fff;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Points Bar */
+.points-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.points-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1.5px solid #e8e8e8;
+  text-align: center;
+}
+
+.points-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.points-card h2 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: -1px;
+}
+
+.points-card h2 span {
+  font-size: 18px;
+  color: #888;
+  font-weight: 400;
+}
+
+/* Log Form */
+.log-form {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  border: 1.5px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.log-form h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.log-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.log-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-input-group label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.log-input-group input {
+  padding: 12px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.log-input-group input:focus {
+  border-color: #1a1a1a;
+}
+
+/* Win Toggle */
+.win-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.win-toggle label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.win-toggle button {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1.5px solid #e8e8e8;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.win-toggle button.active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Attributes Card */
+.attributes-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  border: 1.5px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.attributes-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.points-available {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+/* Attribute Row */
+.attribute-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.attr-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  width: 110px;
+  text-transform: capitalize;
+}
+
+.attr-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.attr-bar {
+  height: 100%;
+  background: #1a1a1a;
+  border-radius: 50px;
+  transition: width 0.3s ease;
+}
+
+.attr-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  width: 28px;
+  text-align: right;
+}
+
+.upgrade-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #e8e8e8;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a1a1a;
+}
+
+.upgrade-btn:hover:not(:disabled) {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.upgrade-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Games Card */
+.games-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  border: 1.5px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.games-card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.no-games {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  padding: 40px 0;
+}
+
+/* Game Log Item */
+.game-log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.game-log-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.game-log-stats span {
+  font-size: 13px;
+  color: #555;
+}
+
+.game-log-points {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.win {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.loss {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* Tablet and Mobile */
+@media (max-width: 768px) {
+  .layout-lab {
+    margin-top: 8px;
+    width: calc(100% - 20px);
+    justify-content: space-between;
+    border-radius: 14px;
   }
 
-  .submit-btn {
-    align-self: flex-end;
-    padding: 12px 24px;
-    background: #1a1a1a;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
+  .layout-lab span {
+    margin-left: 2px;
+  }
+
+  .layout-lab button {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .layout-coach .setup-form {
+    display: flex;
+    max-width: 100%;
+  }
+
+  /* Points bar stacks */
+  .points-bar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .points-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 16px 20px;
+  }
+
+  .points-label {
+    margin-bottom: 0;
+  }
+
+  /* Dashboard grid stacks */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Player header stacks */
+  .player-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .log-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .player-select {
+    grid-column: 1 / -1;
+  }
+
+  .secondary-btn,
+  .log-btn {
+    width: 100%;
+  }
+
+  .player-header h1 {
+    font-size: 28px;
+  }
+
+  /* Log form 2 columns */
+  .log-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .dashboard {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .log-form {
+    padding: 20px 16px;
+  }
+
+  .attributes-card {
+    padding: 20px 16px;
+  }
+
+  .games-card {
+    padding: 20px 16px;
+  }
+}
+
+/* iPhone XR specific */
+@media (max-width: 430px) {
+  .setup-page h1 {
+    font-size: 32px;
+  }
+
+  .setup-form {
+    padding: 24px 16px;
+  }
+
+  .save-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .save-actions {
+    width: 100%;
+  }
+
+  .save-actions button {
+    flex: 1;
+  }
+
+  .points-card h2 {
+    font-size: 24px;
+  }
+
+  .points-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .log-input-group label {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .log-input-group input {
+    padding: 10px 6px;
     font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  } 
-  
+  }
+
+  .attr-name {
+    width: 90px;
+    font-size: 12px;
+  }
+}

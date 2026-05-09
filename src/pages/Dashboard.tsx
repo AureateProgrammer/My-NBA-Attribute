@@ -1,17 +1,23 @@
 import type { Build, GameLog } from '../types/build'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { calculateGamePoints, applyMonthlyCap, applyBankedCap } from '../utils/pointCalculator'
 
 interface DashboardProps {
   build: Build
+  layoutMode: 'classic' | 'coach' | 'focus'
+  availableBuilds: Build[]
   onUpdate: (updatedBuild: Build) => void
+  onOpenSetup: () => void
+  onSwitchBuild: (buildId: string) => void
 }
 
-const Dashboard = ({ build, onUpdate }: DashboardProps) => {
-  const [gameLogs, setGameLogs] = useState<GameLog[]>(() => {
-    const saved = localStorage.getItem('progression_gamelogs')
-    return saved ? JSON.parse(saved) : []
-  })
+const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, onSwitchBuild }: DashboardProps) => {
+  const [gameLogs, setGameLogs] = useState<GameLog[]>([])
+
+  useEffect(() => {
+    const saved = localStorage.getItem(`progression_gamelogs_${build.id}`)
+    setGameLogs(saved ? JSON.parse(saved) : [])
+  }, [build.id])
 
  const [showLogForm, setShowLogForm] = useState(false)
 
@@ -48,7 +54,7 @@ const pointsEarned = calculateGamePoints(newLog, build.gamesPlayedThisMonth)
     }
 
     const updatedLogs = [newLog, ...gameLogs]
-    localStorage.setItem('progression_gamelogs', JSON.stringify(updatedLogs))
+    localStorage.setItem(`progression_gamelogs_${build.id}`, JSON.stringify(updatedLogs))
     setGameLogs(updatedLogs)
     onUpdate(updatedBuild)
     setShowLogForm(false)
@@ -82,7 +88,7 @@ const pointsEarned = calculateGamePoints(newLog, build.gamesPlayedThisMonth)
   }
 
   return (
-    <div className="dashboard">
+    <div className={`dashboard layout-${layoutMode}`}>
 
       {/* Player Header */}
       <div className="player-header">
@@ -93,9 +99,25 @@ const pointsEarned = calculateGamePoints(newLog, build.gamesPlayedThisMonth)
             <span className="tag">{build.archetype}</span>
           </div>
         </div>
-        <button className="log-btn" onClick={() => setShowLogForm(!showLogForm)}>
-          {showLogForm ? 'Cancel' : '+ Log Game'}
-        </button>
+        <div className="header-actions">
+          <select
+            className="player-select"
+            value={build.id}
+            onChange={(e) => onSwitchBuild(e.target.value)}
+          >
+            {availableBuilds.map((player) => (
+              <option key={player.id} value={player.id}>
+                {player.name} ({player.position})
+              </option>
+            ))}
+          </select>
+          <button className="secondary-btn" onClick={onOpenSetup}>
+            Setup
+          </button>
+          <button className="log-btn" onClick={() => setShowLogForm(!showLogForm)}>
+            {showLogForm ? 'Cancel' : '+ Log Game'}
+          </button>
+        </div>
       </div>
 
       {/* Points Bar */}
