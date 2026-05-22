@@ -939,7 +939,13 @@ body {
   border: 1.5px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+}
+
+.log-form-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .log-form h3 {
@@ -948,9 +954,47 @@ body {
   color: var(--text);
 }
 
+.log-form-header p {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 64ch;
+}
+
+.log-sections {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+.log-panel {
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.log-panel h4 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
 .log-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.log-grid-primary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.log-grid-secondary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -989,6 +1033,8 @@ body {
   display: flex;
   align-items: center;
   gap: 16px;
+  justify-content: space-between;
+  padding: 4px 2px 0;
 }
 
 .win-toggle label {
@@ -1008,6 +1054,11 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+.win-toggle button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .win-toggle button.active {
@@ -1126,6 +1177,220 @@ body {
   font-size: 20px;
   font-weight: 800;
   color: var(--text);
+}
+
+/* Log Game Page */
+.log-game-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.log-game-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.log-game-kicker {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.log-game-topbar h1 {
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin: 0 0 10px;
+}
+
+.log-game-topbar p {
+  color: var(--muted);
+  max-width: 62ch;
+}
+
+.log-game-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.log-game-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.points-card-accent {
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.points-card-accent span {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.log-game-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.log-game-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.log-game-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.log-game-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-game-header h3,
+.log-game-card-summary h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.log-game-header p,
+.log-game-card-summary > p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.log-game-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.log-game-section h4,
+.log-recent-list h4 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.log-game-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.log-game-card .log-input-group {
+  gap: 6px;
+}
+
+.log-game-card .log-input-group span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.log-game-card .log-input-group input {
+  padding: 13px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: var(--surface-soft);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+}
+
+.log-game-win {
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.log-game-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.log-game-footer .submit-btn {
+  min-width: 180px;
+}
+
+.log-game-card-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.log-summary-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.log-summary-list div {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--surface-soft);
+}
+
+.log-summary-list span {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.log-summary-list strong {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.log-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.log-game-card-summary .no-games {
+  text-align: left;
+  padding: 10px 0 0;
 }
 
 .no-games {
@@ -1344,6 +1609,14 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .log-game-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .log-game-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   /* Player header stacks */
   .player-header {
     flex-direction: column;
@@ -1377,8 +1650,15 @@ body {
 
   /* Log form 2 columns */
   .log-grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+
+  .log-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .log-panel {
+    padding: 16px;
   }
 
   .dashboard {
@@ -1387,7 +1667,21 @@ body {
   }
 
   .log-form {
-    padding: 20px 16px;
+    padding: 18px 14px;
+    gap: 14px;
+  }
+
+  .log-form-header p {
+    font-size: 13px;
+  }
+
+  .log-grid-primary,
+  .log-grid-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .win-toggle {
+    gap: 12px;
   }
 
   .attributes-card {
@@ -1396,6 +1690,54 @@ body {
 
   .games-card {
     padding: 20px 16px;
+  }
+
+  .log-game-page {
+    padding: 24px 16px 48px;
+    gap: 18px;
+  }
+
+  .log-game-topbar {
+    flex-direction: column;
+  }
+
+  .log-game-topbar h1 {
+    font-size: 34px;
+  }
+
+  .log-game-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .log-game-actions .player-select {
+    width: 100%;
+  }
+
+  .log-game-card {
+    padding: 18px 16px;
+    border-radius: 18px;
+  }
+
+  .log-game-stats {
+    gap: 10px;
+  }
+
+  .log-game-stats .points-card {
+    padding: 16px 18px;
+  }
+
+  .log-game-stats .points-card h2 {
+    font-size: 28px;
+  }
+
+  .log-game-input-grid,
+  .log-summary-list {
+    grid-template-columns: 1fr;
+  }
+
+  .log-game-footer .submit-btn {
+    width: 100%;
   }
 }
 
@@ -1497,8 +1839,21 @@ body {
   }
 
   .log-input-group input {
-    padding: 10px 6px;
-    font-size: 14px;
+    padding: 11px 8px;
+    font-size: 15px;
+  }
+
+  .log-panel h4 {
+    font-size: 11px;
+  }
+
+  .win-toggle {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .win-toggle button {
+    width: 100%;
   }
 
   .attr-name {

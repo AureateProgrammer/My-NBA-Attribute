@@ -5,6 +5,7 @@ import type { Build, BuildDraft, GameLog } from './types/build'
 import './App.css'
 
 import Dashboard from './pages/Dashboard'
+import LogGamePage from './pages/LogGamePage.tsx'
 
 const BUILDS_STORAGE_KEY = 'progression_builds_v2'
 const ACTIVE_BUILD_STORAGE_KEY = 'progression_active_build_id'
@@ -105,14 +106,56 @@ const DashboardRoute = ({ builds, layoutMode, onUpdate, onSetActive }: Dashboard
 
   return (
     <Dashboard
+      key={activeBuild.id}
       build={activeBuild}
       layoutMode={layoutMode}
       availableBuilds={builds}
       onUpdate={onUpdate}
       onOpenSetup={() => navigate('/setup')}
+      onOpenLogGame={() => navigate(`/dashboard/${activeBuild.id}/log-game`)}
       onSwitchBuild={(nextBuildId) => {
         onSetActive(nextBuildId)
         navigate(`/dashboard/${nextBuildId}`)
+      }}
+    />
+  )
+}
+
+interface LogGameRouteProps {
+  builds: Build[]
+  layoutMode: LayoutMode
+  onUpdate: (updatedBuild: Build) => void
+  onSetActive: (buildId: string) => void
+}
+
+const LogGameRoute = ({ builds, layoutMode, onUpdate, onSetActive }: LogGameRouteProps) => {
+  const navigate = useNavigate()
+  const { buildId } = useParams<{ buildId: string }>()
+
+  const activeBuild = buildId ? builds.find((build) => build.id === buildId) : null
+
+  useEffect(() => {
+    if (activeBuild) {
+      onSetActive(activeBuild.id)
+    }
+  }, [activeBuild, onSetActive])
+
+  if (!activeBuild) {
+    return <Navigate to="/setup" replace />
+  }
+
+  return (
+    <LogGamePage
+      key={activeBuild.id}
+      build={activeBuild}
+      layoutMode={layoutMode}
+      availableBuilds={builds}
+      onUpdate={onUpdate}
+      onBack={() => navigate(`/dashboard/${activeBuild.id}`)}
+      onOpenSetup={() => navigate('/setup')}
+      onSwitchBuild={(nextBuildId: string) => {
+        onSetActive(nextBuildId)
+        navigate(`/dashboard/${nextBuildId}/log-game`)
       }}
     />
   )
@@ -266,6 +309,17 @@ function App() {
           path="/dashboard/:buildId"
           element={
             <DashboardRoute
+              builds={builds}
+              layoutMode={layoutMode}
+              onUpdate={updateBuild}
+              onSetActive={(buildId) => setActive(buildId)}
+            />
+          }
+        />
+        <Route
+          path="/dashboard/:buildId/log-game"
+          element={
+            <LogGameRoute
               builds={builds}
               layoutMode={layoutMode}
               onUpdate={updateBuild}

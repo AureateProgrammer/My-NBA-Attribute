@@ -1,6 +1,6 @@
 import type { Build, GameLog } from '../types/build'
-import { useEffect, useState } from 'react'
-import { calculateGamePoints, applyMonthlyCap, applyBankedCap } from '../utils/pointCalculator'
+import { useState } from 'react'
+import { calculateGamePoints } from '../utils/pointCalculator'
 
 interface DashboardProps {
   build: Build
@@ -8,70 +8,17 @@ interface DashboardProps {
   availableBuilds: Build[]
   onUpdate: (updatedBuild: Build) => void
   onOpenSetup: () => void
+  onOpenLogGame: () => void
   onSwitchBuild: (buildId: string) => void
 }
 
-const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, onSwitchBuild }: DashboardProps) => {
-  const [gameLogs, setGameLogs] = useState<GameLog[]>([])
+const loadGameLogs = (buildId: string) => {
+  const saved = localStorage.getItem(`progression_gamelogs_${buildId}`)
+  return saved ? (JSON.parse(saved) as GameLog[]) : []
+}
 
-  useEffect(() => {
-    const saved = localStorage.getItem(`progression_gamelogs_${build.id}`)
-    setGameLogs(saved ? JSON.parse(saved) : [])
-  }, [build.id])
-
- const [showLogForm, setShowLogForm] = useState(false)
-
-  // Game log form state
-  const [form, setForm] = useState({
-    pointsEarned: 0,
-    assists: 0,
-    rebounds: 0,
-    steals: 0,
-    blocks: 0,
-    turnovers: 0,
-    minutesPlayed: 0,
-    fgPercentage: 0,
-    win: false,
-  })
-
-  const handleLogGame = () => {
-    const newLog: GameLog = {
-      id: Date.now().toString(),
-      date: new Date().toLocaleDateString(),
-      ...form,
-    }
-
-
-const pointsEarned = calculateGamePoints(newLog, build.gamesPlayedThisMonth)
-    const newMonthly = applyMonthlyCap(build.monthlyPointsEarned, pointsEarned)
-    const newBanked = applyBankedCap(build.bankedPoints + pointsEarned)
-
-    const updatedBuild: Build = {
-      ...build,
-      bankedPoints: newBanked,
-      monthlyPointsEarned: newMonthly,
-      gamesPlayedThisMonth: build.gamesPlayedThisMonth + 1,
-    }
-
-    const updatedLogs = [newLog, ...gameLogs]
-    localStorage.setItem(`progression_gamelogs_${build.id}`, JSON.stringify(updatedLogs))
-    setGameLogs(updatedLogs)
-    onUpdate(updatedBuild)
-    setShowLogForm(false)
-
-    // reset form
-    setForm({
-      pointsEarned: 0,
-      assists: 0,
-      rebounds: 0,
-      steals: 0,
-      blocks: 0,
-      turnovers: 0,
-      minutesPlayed: 0,
-      fgPercentage: 0,
-      win: false,
-    })
-  }
+const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, onOpenLogGame, onSwitchBuild }: DashboardProps) => {
+  const gameLogs = useState<GameLog[]>(() => loadGameLogs(build.id))[0]
 
   const handleSpendPoint = (attribute: keyof Build['attributes']) => {
     if (build.bankedPoints < 1) return alert('Not enough points!')
@@ -114,8 +61,8 @@ const pointsEarned = calculateGamePoints(newLog, build.gamesPlayedThisMonth)
           <button className="secondary-btn" onClick={onOpenSetup}>
             Setup
           </button>
-          <button className="log-btn" onClick={() => setShowLogForm(!showLogForm)}>
-            {showLogForm ? 'Cancel' : '+ Log Game'}
+          <button className="log-btn" onClick={onOpenLogGame}>
+            + Log Game
           </button>
         </div>
       </div>
@@ -135,46 +82,6 @@ const pointsEarned = calculateGamePoints(newLog, build.gamesPlayedThisMonth)
           <h2>{build.gamesPlayedThisMonth}</h2>
         </div>
       </div>
-
-      {/* Log Game Form */}
-      {showLogForm && (
-        <div className="log-form">
-          <h3>Log Game</h3>
-          <div className="log-grid">
-            {[
-              { label: 'Points', key: 'pointsEarned' },
-              { label: 'Assists', key: 'assists' },
-              { label: 'Rebounds', key: 'rebounds' },
-              { label: 'Steals', key: 'steals' },
-              { label: 'Blocks', key: 'blocks' },
-              { label: 'Turnovers', key: 'turnovers' },
-              { label: 'Minutes', key: 'minutesPlayed' },
-              { label: 'FG%', key: 'fgPercentage' },
-            ].map(({ label, key }) => (
-              <div className="log-input-group" key={key}>
-                <label>{label}</label>
-                <input
-                  type="number"
-                  value={form[key as keyof typeof form] as number}
-                  onChange={(e) => setForm({ ...form, [key]: Number(e.target.value) })}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="win-toggle">
-            <label>Win?</label>
-            <button
-              className={form.win ? 'active' : ''}
-              onClick={() => setForm({ ...form, win: !form.win })}
-            >
-              {form.win ? '✅ Win' : '❌ Loss'}
-            </button>
-          </div>
-          <button className="submit-btn" onClick={handleLogGame}>
-            Submit Game
-          </button>
-        </div>
-      )}
 
       {/* Main Grid */}
       <div className="dashboard-grid">
