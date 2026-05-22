@@ -66,6 +66,27 @@
   --glass: rgba(255, 252, 247, 0.92);
 }
 
+.theme-dark {
+  --bg: #0e1117;
+  --surface: #161b23;
+  --surface-soft: #1d2430;
+  --text: #e6edf3;
+  --muted: #9ba7b4;
+  --muted-2: #b8c2cc;
+  --line: #2d3745;
+  --line-soft: #3a4656;
+  --chip-text: #c4cfda;
+  --primary: #4ea1ff;
+  --primary-hover: #7ab8ff;
+  --primary-contrast: #051425;
+  --danger: #ff8f8f;
+  --danger-line: #643539;
+  --success: #4dd4a2;
+  --loss: #ff7d7d;
+  --glass: rgba(22, 27, 35, 0.82);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--bg);
@@ -517,6 +538,7 @@ body {
 
 .submit-btn {
   align-self: flex-end;
+  margin-top: 6px;
   padding: 12px 24px;
   background: var(--primary);
   color: var(--primary-contrast);
@@ -1215,6 +1237,7 @@ body {
   line-height: 1;
   letter-spacing: -2px;
   margin: 0 0 10px;
+  color: var(--text);
 }
 
 .log-game-topbar p {

@@ -16,8 +16,8 @@ const THEME_STORAGE_KEY = 'progression_theme_mode'
 
 type LayoutMode = 'classic' | 'coach' | 'focus'
 const LAYOUT_MODES: LayoutMode[] = ['classic', 'coach', 'focus']
-type ThemeMode = 'mono' | 'forest' | 'sunset'
-const THEME_MODES: ThemeMode[] = ['mono', 'forest', 'sunset']
+type ThemeMode = 'mono' | 'forest' | 'sunset' | 'dark'
+const THEME_MODES: ThemeMode[] = ['mono', 'forest', 'sunset', 'dark']
 
 const isLayoutMode = (value: string | null): value is LayoutMode => {
   return value !== null && LAYOUT_MODES.includes(value as LayoutMode)
