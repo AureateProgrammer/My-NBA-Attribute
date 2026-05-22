@@ -144,11 +144,127 @@ body {
 /* Setup Page */
 .setup-page {
   min-height: 100vh;
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  gap: 28px;
+  padding: 56px 20px 64px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.setup-page::before,
+.setup-page::after {
+  content: '';
+  position: absolute;
+  inset: auto;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.setup-page::before {
+  width: 34rem;
+  height: 34rem;
+  top: -12rem;
+  right: -10rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 22%, transparent), transparent 68%);
+  filter: blur(18px);
+  animation: orbitGlow 16s ease-in-out infinite alternate;
+}
+
+.setup-page::after {
+  width: 26rem;
+  height: 26rem;
+  bottom: -10rem;
+  left: -8rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--success) 16%, transparent), transparent 66%);
+  filter: blur(20px);
+  animation: orbitGlow 18s ease-in-out infinite alternate-reverse;
+}
+
+.setup-page > :not(.setup-ambient) {
+  position: relative;
+  z-index: 1;
+}
+
+.setup-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-orb,
+.ambient-grid {
+  position: absolute;
+}
+
+.ambient-orb {
+  border-radius: 50%;
+  filter: blur(2px);
+  animation: floatOrb 12s ease-in-out infinite;
+}
+
+.orb-1 {
+  top: 14%;
+  right: 12%;
+  width: 11rem;
+  height: 11rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 20%, transparent), transparent 70%);
+}
+
+.orb-2 {
+  bottom: 18%;
+  left: 10%;
+  width: 8rem;
+  height: 8rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--success) 18%, transparent), transparent 72%);
+  animation-delay: -4s;
+}
+
+.ambient-grid {
+  inset: 0;
+  opacity: 0.35;
+  background-image: linear-gradient(to right, color-mix(in srgb, var(--line) 50%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--line) 50%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 28%, transparent 82%);
+}
+
+.setup-hero {
+  width: 100%;
+  max-width: 1120px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.setup-copy {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  padding: 40px 20px;
+  gap: 14px;
+  padding: 14px 0;
+}
+
+.setup-kicker {
+  align-self: flex-start;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted-2);
 }
 
 .setup-page h1 {
@@ -156,13 +272,171 @@ body {
   font-weight: 800;
   letter-spacing: -2px;
   color: var(--text);
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
-.setup-page p {
+.setup-copy p {
   font-size: 16px;
   color: var(--muted);
-  margin-bottom: 48px;
+  margin-bottom: 0;
+  max-width: 60ch;
+}
+
+.setup-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.setup-metric {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  animation: liftIn 0.75s ease both;
+}
+
+.setup-metric:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.setup-metric:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.setup-metric strong {
+  display: block;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -1.5px;
+  color: var(--text);
+}
+
+.setup-metric span {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.setup-preview {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1.5px solid var(--line);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 86%, var(--primary) 14%), var(--surface));
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+  animation: liftIn 0.85s ease both;
+}
+
+.setup-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, color-mix(in srgb, var(--primary) 18%, transparent), transparent 35%),
+    radial-gradient(circle at bottom left, color-mix(in srgb, var(--success) 14%, transparent), transparent 42%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.setup-preview-top,
+.setup-preview-list,
+.setup-preview-rings,
+.setup-preview strong,
+.setup-preview p {
+  position: relative;
+  z-index: 1;
+}
+
+.setup-preview-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.setup-preview strong {
+  margin-top: 12px;
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--text);
+}
+
+.setup-preview p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.setup-preview-rings {
+  position: absolute;
+  inset: auto -20px 20px auto;
+  width: 200px;
+  height: 200px;
+}
+
+.setup-preview-rings span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent);
+  animation: ringPulse 10s linear infinite;
+}
+
+.setup-preview-rings span:nth-child(2) {
+  inset: 18px;
+  animation-delay: -3s;
+}
+
+.setup-preview-rings span:nth-child(3) {
+  inset: 36px;
+  animation-delay: -6s;
+}
+
+.setup-preview-list {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.setup-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.setup-preview-row span {
+  font-size: 12px;
+  color: var(--muted-2);
+}
+
+.setup-preview-row strong {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
 }
 
 /* Form */
@@ -237,6 +511,10 @@ body {
   border-color: var(--primary);
 }
 
+.button-group button:hover:not(.active) {
+  transform: translateY(-1px);
+}
+
 .submit-btn {
   align-self: flex-end;
   padding: 12px 24px;
@@ -254,6 +532,19 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.setup-form,
+.save-slots {
+  animation: liftIn 0.9s ease both;
+}
+
+.setup-form {
+  animation-delay: 0.12s;
+}
+
+.save-slots {
+  animation-delay: 0.2s;
 }
 
 .attributes-editor {
@@ -316,6 +607,55 @@ body {
 .save-slots h2 {
   font-size: 22px;
   margin-bottom: 16px;
+}
+
+@keyframes liftIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes orbitGlow {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(0, -14px, 0) scale(1.06);
+  }
+}
+
+@keyframes floatOrb {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-14px) scale(1.04);
+  }
+}
+
+@keyframes ringPulse {
+  0% {
+    transform: scale(0.94);
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+
+  100% {
+    transform: scale(1.08);
+    opacity: 0.2;
+  }
 }
 
 .save-list {
@@ -860,9 +1200,121 @@ body {
     font-size: 11px;
   }
 
+  .setup-page {
+    gap: 20px;
+    padding: 28px 16px 48px;
+  }
+
+  .setup-page::before,
+  .setup-page::after,
+  .ambient-grid,
+  .setup-preview-rings {
+    opacity: 0.55;
+  }
+
+  .setup-hero {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .setup-copy {
+    padding: 0;
+  }
+
+  .setup-kicker {
+    font-size: 10px;
+  }
+
+  .setup-page h1 {
+    font-size: 36px;
+    letter-spacing: -1.5px;
+  }
+
+  .setup-copy p {
+    font-size: 15px;
+  }
+
+  .setup-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .setup-metric {
+    padding: 12px 14px;
+  }
+
+  .setup-metric strong {
+    font-size: 24px;
+  }
+
+  .setup-preview {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .setup-preview strong {
+    font-size: 24px;
+  }
+
+  .setup-preview-rings {
+    inset: auto -28px 12px auto;
+    width: 150px;
+    height: 150px;
+  }
+
+  .setup-preview-row {
+    padding: 10px 11px;
+  }
+
   .layout-coach .setup-form {
     display: flex;
     max-width: 100%;
+  }
+
+  .setup-form,
+  .save-slots {
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+
+  .setup-form {
+    gap: 22px;
+  }
+
+  .form-group input,
+  .player-select,
+  .secondary-btn,
+  .submit-btn,
+  .button-group button,
+  .save-actions button,
+  .log-btn,
+  .win-toggle button,
+  .upgrade-btn {
+    min-height: 44px;
+  }
+
+  .form-group input,
+  .player-select {
+    font-size: 16px;
+  }
+
+  .button-group {
+    gap: 10px;
+  }
+
+  .button-group button {
+    flex: 1 1 calc(50% - 10px);
+    padding: 12px 14px;
+  }
+
+  .setup-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .setup-actions .secondary-btn,
+  .setup-actions .submit-btn {
+    width: 100%;
   }
 
   .attributes-grid {
@@ -949,12 +1401,62 @@ body {
 
 /* iPhone XR specific */
 @media (max-width: 430px) {
+  .style-lab-wrap {
+    padding-inline: 8px;
+  }
+
+  .layout-lab,
+  .theme-lab {
+    width: calc(100% - 16px);
+  }
+
+  .setup-page {
+    padding: 22px 12px 40px;
+  }
+
   .setup-page h1 {
-    font-size: 32px;
+    font-size: 30px;
+  }
+
+  .setup-copy p {
+    font-size: 14px;
   }
 
   .setup-form {
-    padding: 24px 16px;
+    padding: 18px 14px;
+  }
+
+  .setup-preview {
+    padding: 16px;
+  }
+
+  .setup-preview-top {
+    font-size: 10px;
+    gap: 8px;
+  }
+
+  .setup-preview strong {
+    font-size: 22px;
+  }
+
+  .setup-preview p {
+    font-size: 14px;
+  }
+
+  .setup-preview-list {
+    gap: 8px;
+  }
+
+  .setup-preview-row span {
+    font-size: 11px;
+  }
+
+  .setup-preview-row strong {
+    font-size: 14px;
+  }
+
+  .setup-metric strong {
+    font-size: 22px;
   }
 
   .save-item {

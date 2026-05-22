@@ -54,6 +54,12 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
     ) as Record<keyof Attributes, string>
   )
   const [editingBuildId, setEditingBuildId] = useState<string | null>(null)
+  const attributeEntries = Object.entries(attributes) as Array<[keyof Attributes, number]>
+  const attributeTotal = attributeEntries.reduce((sum, [, value]) => sum + value, 0)
+  const attributeAverage = attributeTotal / attributeEntries.length
+  const highlightedAttributes = [...attributeEntries]
+    .sort(([, left], [, right]) => right - left)
+    .slice(0, 3)
 
   const resetForm = () => {
     setName('')
@@ -155,12 +161,62 @@ const SetupPage = ({ layoutMode, onCreate, onUpdateExisting, existingBuilds, onL
 
   return (
     <div className={`setup-page layout-${layoutMode}`}>
-      <h1>{editingBuildId ? 'Edit Your Build' : 'Create Your Build'}</h1>
-      <p>
-        {editingBuildId
-          ? 'Update this player before syncing with MyLEAGUE.'
-          : 'Set up your player to get started'}
-      </p>
+      <div className="setup-ambient" aria-hidden="true">
+        <span className="ambient-orb orb-1" />
+        <span className="ambient-orb orb-2" />
+        <span className="ambient-grid" />
+      </div>
+
+      <section className="setup-hero">
+        <div className="setup-copy">
+          <span className="setup-kicker">Build lab</span>
+          <h1>{editingBuildId ? 'Edit Your Build' : 'Create Your Build'}</h1>
+          <p>
+            {editingBuildId
+              ? 'Update this player before syncing with MyLEAGUE.'
+              : 'Create your player build to track your MyLEAGUE progress. You can edit or create multiple builds to simulate different player types and compare their growth over time.'}
+          </p>
+
+          <div className="setup-metrics" aria-label="Current build summary">
+            <div className="setup-metric">
+              <strong>{existingBuilds.length}</strong>
+              <span>Saved builds</span>
+            </div>
+            <div className="setup-metric">
+              <strong>{Math.round(attributeAverage)}</strong>
+              <span>Attribute avg</span>
+            </div>
+            <div className="setup-metric">
+              <strong>{attributeTotal}</strong>
+              <span>Total rating</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="setup-preview" aria-label="Live build preview">
+          <div className="setup-preview-top">
+            <span>Live build pulse</span>
+            <span>{layoutMode}</span>
+          </div>
+          <strong>{name.trim() || 'Untitled prospect'}</strong>
+          <p>
+            {position} • {archetype}
+          </p>
+          <div className="setup-preview-rings" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="setup-preview-list">
+            {highlightedAttributes.map(([attrKey, value]) => (
+              <div className="setup-preview-row" key={attrKey}>
+                <span>{attributeLabels[attrKey]}</span>
+                <strong>{value}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <div className="setup-form">
         {/* Player Name */}
