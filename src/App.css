@@ -400,6 +400,58 @@ body {
   color: var(--text);
 }
 
+/* Header and auth */
+.app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.app-header .container {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px;
+}
+.brand {
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+}
+.app-header nav a,
+.app-header nav button {
+  margin-left: 12px;
+  color: var(--muted-2);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-page {
+  padding: 48px 16px;
+}
+.auth-form {
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.auth-form label { text-align: left; font-size: 14px; }
+.auth-form input { padding: 10px; border: 1px solid var(--line); border-radius: 8px; }
+.auth-form button { padding: 10px; border-radius: 8px; background: var(--primary); color: var(--primary-contrast); border: none; cursor: pointer; }
+
+.loading { padding: 12px; color: var(--muted); }
+.error { color: var(--danger); padding: 8px 0; }
+
+@media (max-width: 640px) {
+  .setup-hero { grid-template-columns: 1fr; }
+  .app-header .container { padding: 0 10px; }
+}
+
 .setup-preview p {
   margin-bottom: 0;
   color: var(--muted);
