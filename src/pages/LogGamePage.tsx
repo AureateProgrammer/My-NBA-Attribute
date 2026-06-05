@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Build, GameLog } from '../types/build'
-import { calculateGamePoints, applyBankedCap, applyMonthlyCap } from '../utils/pointCalculator'
+import { calculateGamePoints, applyBankedCap, applyMonthlyCap, MONTHLY_XP_CAP } from '../utils/pointCalculator'
 
 interface LogGamePageProps {
   build: Build
@@ -108,13 +108,13 @@ const LogGamePage = ({ build, layoutMode, availableBuilds, onUpdate, onBack, onO
 
       <section className="log-game-stats">
         <div className="points-card">
-          <p className="points-label">Banked Points</p>
+          <p className="points-label">Banked XP</p>
           <h2>{build.bankedPoints}</h2>
         </div>
         <div className="points-card">
-          <p className="points-label">Monthly Points</p>
+          <p className="points-label">Monthly XP</p>
           <h2>
-            {build.monthlyPointsEarned} <span>/50</span>
+            {build.monthlyPointsEarned} <span>/{MONTHLY_XP_CAP}</span>
           </h2>
         </div>
         <div className="points-card">
@@ -122,7 +122,7 @@ const LogGamePage = ({ build, layoutMode, availableBuilds, onUpdate, onBack, onO
           <h2>{build.gamesPlayedThisMonth}</h2>
         </div>
         <div className="points-card points-card-accent">
-          <p className="points-label">Current Game Preview</p>
+          <p className="points-label">Current XP Preview</p>
           <h2>{previewPoints}</h2>
         </div>
       </section>
@@ -229,7 +229,7 @@ const LogGamePage = ({ build, layoutMode, availableBuilds, onUpdate, onBack, onO
                     </span>
                     <span className={log.win ? 'win' : 'loss'}>{log.win ? 'W' : 'L'}</span>
                   </div>
-                  <span className="game-log-points">+{points} pts</span>
+                  <span className="game-log-points">+{points} XP</span>
                 </div>
               )
             })}

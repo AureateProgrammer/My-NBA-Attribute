@@ -458,7 +458,6 @@ body {
   font-size: 15px;
   letter-spacing: -0.3px;
 }
-}
 
 /* Form */
 .setup-form {
@@ -1130,7 +1129,7 @@ body {
   font-size: 13px;
   font-weight: 600;
   color: var(--chip-text);
-  width: 110px;
+  width: 98px;
   text-transform: capitalize;
 }
 
@@ -1155,6 +1154,16 @@ body {
   color: var(--text);
   width: 28px;
   text-align: right;
+}
+
+.attr-cost {
+  min-width: 58px;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .upgrade-btn {
@@ -1882,5 +1891,10 @@ body {
   .attr-name {
     width: 90px;
     font-size: 12px;
+  }
+
+  .attr-cost {
+    min-width: 50px;
+    font-size: 9px;
   }
 }

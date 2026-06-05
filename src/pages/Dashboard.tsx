@@ -1,6 +1,6 @@
 import type { Build, GameLog } from '../types/build'
 import { useState } from 'react'
-import { calculateGamePoints } from '../utils/pointCalculator'
+import { calculateGamePoints, getUpgradeCost, MONTHLY_XP_CAP } from '../utils/pointCalculator'
 
 interface DashboardProps {
   build: Build
@@ -21,14 +21,18 @@ const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, 
   const gameLogs = useState<GameLog[]>(() => loadGameLogs(build.id))[0]
 
   const handleSpendPoint = (attribute: keyof Build['attributes']) => {
-    if (build.bankedPoints < 1) return alert('Not enough points!')
+    const currentValue = build.attributes[attribute]
+    if (currentValue >= 99) return
+
+    const upgradeCost = getUpgradeCost(currentValue)
+    if (build.bankedPoints < upgradeCost) return alert(`Not enough XP. Need ${upgradeCost} XP.`)
 
     const updatedBuild: Build = {
       ...build,
-      bankedPoints: build.bankedPoints - 1,
+      bankedPoints: build.bankedPoints - upgradeCost,
       attributes: {
         ...build.attributes,
-        [attribute]: build.attributes[attribute] + 1,
+        [attribute]: currentValue + 1,
       },
     }
     onUpdate(updatedBuild)
@@ -70,12 +74,12 @@ const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, 
       {/* Points Bar */}
       <div className="points-bar">
         <div className="points-card">
-          <p className="points-label">Banked Points</p>
+          <p className="points-label">Banked XP</p>
           <h2>{build.bankedPoints}</h2>
         </div>
         <div className="points-card">
-          <p className="points-label">Monthly Points</p>
-          <h2>{build.monthlyPointsEarned} <span>/50</span></h2>
+          <p className="points-label">Monthly XP</p>
+          <h2>{build.monthlyPointsEarned} <span>/{MONTHLY_XP_CAP}</span></h2>
         </div>
         <div className="points-card">
           <p className="points-label">Games This Month</p>
@@ -90,27 +94,35 @@ const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, 
         <div className="attributes-card">
           <h3>Attributes</h3>
           <p className="points-available">
-            {build.bankedPoints} points available to spend
+            {build.bankedPoints} XP available to spend
           </p>
-          {(Object.keys(build.attributes) as Array<keyof Build['attributes']>).map((attr) => (
-            <div className="attribute-row" key={attr}>
-              <span className="attr-name">{attr}</span>
-              <div className="attr-bar-wrap">
-                <div
-                  className="attr-bar"
-                  style={{ width: `${build.attributes[attr]}%` }}
-                />
+          {(Object.keys(build.attributes) as Array<keyof Build['attributes']>).map((attr) => {
+            const currentValue = build.attributes[attr]
+            const upgradeCost = getUpgradeCost(currentValue)
+            const canUpgrade = currentValue < 99 && build.bankedPoints >= upgradeCost
+
+            return (
+              <div className="attribute-row" key={attr}>
+                <span className="attr-name">{attr}</span>
+                <div className="attr-bar-wrap">
+                  <div
+                    className="attr-bar"
+                    style={{ width: `${currentValue}%` }}
+                  />
+                </div>
+                <span className="attr-value">{currentValue}</span>
+                <span className="attr-cost">{currentValue >= 99 ? 'MAX' : `${upgradeCost} XP`}</span>
+                <button
+                  className="upgrade-btn"
+                  onClick={() => handleSpendPoint(attr)}
+                  disabled={!canUpgrade}
+                  title={currentValue >= 99 ? 'Attribute is maxed out' : `Upgrade cost: ${upgradeCost} XP`}
+                >
+                  +
+                </button>
               </div>
-              <span className="attr-value">{build.attributes[attr]}</span>
-              <button
-                className="upgrade-btn"
-                onClick={() => handleSpendPoint(attr)}
-                disabled={build.bankedPoints < 1}
-              >
-                +
-              </button>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Recent Games */}
@@ -128,7 +140,7 @@ const Dashboard = ({ layoutMode, build, availableBuilds, onUpdate, onOpenSetup, 
                   <span>{log.pointsEarned}pts / {log.assists}ast / {log.rebounds}reb</span>
                   <span className={log.win ? 'win' : 'loss'}>{log.win ? 'W' : 'L'}</span>
                 </div>
-                <span className="game-log-points">+{pts} pts</span>
+                <span className="game-log-points">+{pts} XP</span>
               </div>
             )
           })}
