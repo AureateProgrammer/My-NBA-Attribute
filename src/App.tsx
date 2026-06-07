@@ -6,6 +6,7 @@ import './App.css'
 
 import Dashboard from './pages/Dashboard'
 import LogGamePage from './pages/LogGamePage.tsx'
+import { AuthProvider } from './context/AuthContext'
 
 const BUILDS_STORAGE_KEY = 'progression_builds_v2'
 const ACTIVE_BUILD_STORAGE_KEY = 'progression_active_build_id'
@@ -254,7 +255,8 @@ function App() {
   }
 
   return (
-    <div className={`app-shell layout-${layoutMode} theme-${themeMode}`}>
+    <AuthProvider>
+      <div className={`app-shell layout-${layoutMode} theme-${themeMode}`}>
       <div className="style-lab-wrap">
         <div className="layout-lab" role="group" aria-label="Layout presets">
         <span>Layout</span>
@@ -329,7 +331,8 @@ function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </div>
+      </div>
+    </AuthProvider>
   )
 }
 
