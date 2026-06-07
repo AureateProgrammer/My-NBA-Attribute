@@ -6,10 +6,6 @@ import './App.css'
 
 import Dashboard from './pages/Dashboard'
 import LogGamePage from './pages/LogGamePage.tsx'
-import { AuthProvider, useAuth } from './context/AuthContext'
-import Header from './components/Header'
-import Login from './pages/Login'
-import Register from './pages/Register'
 
 const BUILDS_STORAGE_KEY = 'progression_builds_v2'
 const ACTIVE_BUILD_STORAGE_KEY = 'progression_active_build_id'
@@ -165,17 +161,6 @@ const LogGameRoute = ({ builds, layoutMode, onUpdate, onSetActive }: LogGameRout
   )
 }
 
-const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  try {
-    const { user } = useAuth()
-    if (!user) return <Navigate to="/login" replace />
-    return <>{children}</>
-  } catch (e) {
-    // if useAuth thrown (not inside provider) redirect to login
-    return <Navigate to="/login" replace />
-  }
-}
-
 function App() {
   const navigate = useNavigate()
   const [{ builds: initialBuilds, activeBuildId: initialActiveBuildId }] = useState(loadInitialState)
@@ -269,10 +254,8 @@ function App() {
   }
 
   return (
-    <AuthProvider>
-      <div className={`app-shell layout-${layoutMode} theme-${themeMode}`}>
-        <Header />
-        <div className="style-lab-wrap">
+    <div className={`app-shell layout-${layoutMode} theme-${themeMode}`}>
+      <div className="style-lab-wrap">
         <div className="layout-lab" role="group" aria-label="Layout presets">
         <span>Layout</span>
         {LAYOUT_MODES.map((mode) => (
@@ -300,69 +283,52 @@ function App() {
         </div>
       </div>
 
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                {builds.length > 0 ? (
-                  <Navigate to={`/dashboard/${activeBuildId ?? builds[0].id}`} replace />
-                ) : (
-                  <Navigate to="/setup" replace />
-                )}
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/setup"
-            element={
-              <RequireAuth>
-                <SetupPage
-                  layoutMode={layoutMode}
-                  onCreate={handleSetupComplete}
-                  onUpdateExisting={handleUpdateExistingBuild}
-                  existingBuilds={builds}
-                  onLoadBuild={handleLoadBuild}
-                  onDeleteBuild={handleDeleteBuild}
-                />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/dashboard/:buildId"
-            element={
-              <RequireAuth>
-                <DashboardRoute
-                  builds={builds}
-                  layoutMode={layoutMode}
-                  onUpdate={updateBuild}
-                  onSetActive={(buildId) => setActive(buildId)}
-                />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/dashboard/:buildId/log-game"
-            element={
-              <RequireAuth>
-                <LogGameRoute
-                  builds={builds}
-                  layoutMode={layoutMode}
-                  onUpdate={updateBuild}
-                  onSetActive={(buildId) => setActive(buildId)}
-                />
-              </RequireAuth>
-            }
-          />
-
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            builds.length > 0
+              ? <Navigate to={`/dashboard/${activeBuildId ?? builds[0].id}`} replace />
+              : <Navigate to="/setup" replace />
+          }
+        />
+        <Route
+          path="/setup"
+          element={
+            <SetupPage
+              layoutMode={layoutMode}
+              onCreate={handleSetupComplete}
+              onUpdateExisting={handleUpdateExistingBuild}
+              existingBuilds={builds}
+              onLoadBuild={handleLoadBuild}
+              onDeleteBuild={handleDeleteBuild}
+            />
+          }
+        />
+        <Route
+          path="/dashboard/:buildId"
+          element={
+            <DashboardRoute
+              builds={builds}
+              layoutMode={layoutMode}
+              onUpdate={updateBuild}
+              onSetActive={(buildId) => setActive(buildId)}
+            />
+          }
+        />
+        <Route
+          path="/dashboard/:buildId/log-game"
+          element={
+            <LogGameRoute
+              builds={builds}
+              layoutMode={layoutMode}
+              onUpdate={updateBuild}
+              onSetActive={(buildId) => setActive(buildId)}
+            />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   )
 }
